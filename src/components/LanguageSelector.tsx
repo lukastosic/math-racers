@@ -10,6 +10,7 @@ const LanguageSelector: React.FC = () => {
         { code: 'de', label: 'DE', flag: '🇩🇪' },
         { code: 'sr-Latn', label: 'SR', flag: '🇷🇸' },
         { code: 'sr-Cyrl', label: 'СР', flag: '🇷🇸' },
+        { code: 'vi', label: 'VI', flag: '🇻🇳' },
     ];
 
     return (

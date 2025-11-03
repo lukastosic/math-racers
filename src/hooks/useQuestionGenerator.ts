@@ -2,17 +2,19 @@ import React, { useMemo } from 'react';
 import { GameSettings, Question, GameCategory, QuestionType, AdvancedQuestion } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
-import { ADVANCED_QUESTIONS as ADVANCED_EN } from '../../public/locales/constants/advanced-en';
-import { ADVANCED_QUESTIONS as ADVANCED_NL } from '../../public/locales/constants/advanced-nl';
-import { ADVANCED_QUESTIONS as ADVANCED_DE } from '../../public/locales/constants/advanced-de';
-import { ADVANCED_QUESTIONS as ADVANCED_SR_LATN } from '../../public/locales/constants/advanced-sr-Latn';
-import { ADVANCED_QUESTIONS as ADVANCED_SR_CYRL } from '../../public/locales/constants/advanced-sr-Cyrl';
+import { ADVANCED_QUESTIONS as ADVANCED_EN } from '../../locales/constants/advanced-en';
+import { ADVANCED_QUESTIONS as ADVANCED_NL } from '../../locales/constants/advanced-nl';
+import { ADVANCED_QUESTIONS as ADVANCED_DE } from '../../locales/constants/advanced-de';
+import { ADVANCED_QUESTIONS as ADVANCED_VI } from '../../locales/constants/advanced-vi';
+import { ADVANCED_QUESTIONS as ADVANCED_SR_LATN } from '../../locales/constants/advanced-sr-Latn';
+import { ADVANCED_QUESTIONS as ADVANCED_SR_CYRL } from '../../locales/constants/advanced-sr-Cyrl';
 
 
 const ALL_ADVANCED_QUESTIONS: { [key: string]: AdvancedQuestion[] } = {
   en: ADVANCED_EN,
   nl: ADVANCED_NL,
   de: ADVANCED_DE,
+  vi: ADVANCED_VI,
   'sr-Latn': ADVANCED_SR_LATN,
   'sr-Cyrl': ADVANCED_SR_CYRL,
 };
@@ -40,15 +42,17 @@ export const useQuestionGenerator = (settings: GameSettings | null): Question[] 
     const generateOptions = (correctAnswer: number | string): (string | number)[] => {
         const options = new Set<string | number>([correctAnswer]);
         // This logic is only for numeric (non-advanced) questions.
-        if (typeof correctAnswer === 'number') {
-            while (options.size < 4) {
-                const wrongOption1 = correctAnswer + getRandomInt(1, 5);
-                const wrongOption2 = Math.max(0, correctAnswer - getRandomInt(1, 5));
-                if (wrongOption1 !== correctAnswer) options.add(wrongOption1);
-                if (options.size < 4 && wrongOption2 !== correctAnswer) options.add(wrongOption2);
-                if (options.size < 4) options.add(getRandomInt(0, Math.max(20, correctAnswer + 5)));
-            }
-        } else {
+    if (typeof correctAnswer === 'number') {
+      // Narrow the union and use explicit numeric types to satisfy TS strict checks
+      const correctNum: number = correctAnswer as number;
+      while (options.size < 4) {
+        const wrongOption1: number = correctNum + getRandomInt(1, 5);
+        const wrongOption2: number = Math.max(0, correctNum - getRandomInt(1, 5));
+        if (wrongOption1 !== correctNum) options.add(wrongOption1);
+        if (options.size < 4 && wrongOption2 !== correctNum) options.add(wrongOption2);
+        if (options.size < 4) options.add(getRandomInt(0, Math.max(20, correctNum + 5)));
+      }
+    } else {
             // Fallback for any unexpected string-based answers, though this block should no longer be hit by Advanced questions.
              while(options.size < 4){
                  options.add(`Wrong Option ${options.size}`);

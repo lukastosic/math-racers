@@ -1,0 +1,33 @@
+{
+  "title": "Cuộc Đua Toán Học!",
+  "category_sum_10": "Cộng đến 10",
+  "category_sum_20": "Cộng đến 20",
+  "category_sum_30": "Cộng đến 30",
+  "category_min_20": "Trừ từ 20",
+  "category_min_30": "Trừ từ 30",
+  "category_advanced": "Nâng cao",
+  "setup_how_many_questions": "Bao nhiêu câu hỏi?",
+  "setup_question_style": "Kiểu câu hỏi",
+  "setup_start_race": "Bắt đầu cuộc đua!",
+  "question_type_open": "dạng mở",
+  "question_type_closed": "dạng trắc nghiệm",
+  "game_loading": "Đang tải câu hỏi...",
+  "game_confirm": "Xác nhận",
+  "feedback_next": "Tiếp theo",
+  "feedback_try_again": "Thử lại!",
+  "completion_title": "Chúc mừng!",
+  "completion_subtitle": "Bạn đã hoàn thành cuộc đua!",
+  "completion_continue": "Tiếp tục",
+  "theme_toggle_label_light": "Chuyển sang chế độ tối",
+  "theme_toggle_label_dark": "Chuyển sang chế độ sáng",
+  "success_messages": [
+    "Tuyệt vời!",
+    "Đúng rồi!",
+    "Siêu sao!",
+    "Kinh ngạc!",
+    "Làm tốt lắm!",
+    "Xuất sắc!",
+    "Tuyệt diệu!",
+    "Làm rất tốt!"
+  ]
+}

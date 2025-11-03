@@ -5,8 +5,10 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { ADVANCED_QUESTIONS as ADVANCED_EN } from '../locales/constants/advanced-en';
 import { ADVANCED_QUESTIONS as ADVANCED_NL } from '../locales/constants/advanced-nl';
 import { ADVANCED_QUESTIONS as ADVANCED_DE } from '../locales/constants/advanced-de';
+import { ADVANCED_QUESTIONS as ADVANCED_VI } from '../locales/constants/advanced-vi';
 import { ADVANCED_QUESTIONS as ADVANCED_SR_LATN } from '../locales/constants/advanced-sr-Latn';
 import { ADVANCED_QUESTIONS as ADVANCED_SR_CYRL } from '../locales/constants/advanced-sr-Cyrl';
+
 
 
 const ALL_ADVANCED_QUESTIONS: { [key: string]: AdvancedQuestion[] } = {
@@ -15,6 +17,7 @@ const ALL_ADVANCED_QUESTIONS: { [key: string]: AdvancedQuestion[] } = {
   de: ADVANCED_DE,
   'sr-Latn': ADVANCED_SR_LATN,
   'sr-Cyrl': ADVANCED_SR_CYRL,
+  vi: ADVANCED_VI,
 };
 
 const getRandomInt = (min: number, max: number): number => {

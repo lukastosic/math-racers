@@ -21,7 +21,7 @@ Before you can build the project, you need to configure it for your GitHub repos
 
 2.  **Configure Base Path:** Open `vite.config.ts` and change the `base` property from `/<YOUR_REPOSITORY_NAME>/` to match your GitHub repository's name. For example, if your repository URL is `https://github.com/your-username/math-race`, you should change the line to:
     ```typescript
-    base: '/math-race/',
+    base: '/math-racers/',
     ```
     This step is crucial for ensuring the app's assets load correctly on GitHub Pages.
 
@@ -35,18 +35,20 @@ Using Docker ensures you have the correct environment for building the applicati
     ```
 
 2.  **Extract the Build Artifacts:** These commands will create a temporary container from the image, copy the `dist` folder (which contains the production-ready website) from the container to your local machine, and then remove the container.
+
+Copy the `dist` into `docs` folder to be able to map a subfoder of a repo to a github pages
     ```bash
     # Create a temporary container
     docker create --name math-race-container math-race-builder
 
     # Copy the /app/dist folder from the container to your current directory
-    docker cp math-race-container:/app/dist ./dist
+    docker cp math-race-container:/app/dist ./docs
 
     # Remove the temporary container
     docker rm math-race-container
     ```
 
-After these steps, you will have a `dist` folder in your project directory. This folder contains the complete, optimized website ready for deployment.
+After these steps, you will have a `docs` folder in your project directory. This folder contains the complete, optimized website ready for deployment.
 
 ## Step 3: Deploy to GitHub Pages
 

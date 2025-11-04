@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 import { GameSettings, Question, GameCategory, QuestionType, AdvancedQuestion } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
-import { ADVANCED_QUESTIONS as ADVANCED_EN } from '../../locales/constants/advanced-en';
-import { ADVANCED_QUESTIONS as ADVANCED_NL } from '../../locales/constants/advanced-nl';
-import { ADVANCED_QUESTIONS as ADVANCED_DE } from '../../locales/constants/advanced-de';
-import { ADVANCED_QUESTIONS as ADVANCED_VI } from '../../locales/constants/advanced-vi';
-import { ADVANCED_QUESTIONS as ADVANCED_SR_LATN } from '../../locales/constants/advanced-sr-Latn';
-import { ADVANCED_QUESTIONS as ADVANCED_SR_CYRL } from '../../locales/constants/advanced-sr-Cyrl';
+import { ADVANCED_QUESTIONS as ADVANCED_EN } from '../locales/constants/advanced-en';
+import { ADVANCED_QUESTIONS as ADVANCED_NL } from '../locales/constants/advanced-nl';
+import { ADVANCED_QUESTIONS as ADVANCED_DE } from '../locales/constants/advanced-de';
+import { ADVANCED_QUESTIONS as ADVANCED_VI } from '../locales/constants/advanced-vi';
+import { ADVANCED_QUESTIONS as ADVANCED_SR_LATN } from '../locales/constants/advanced-sr-Latn';
+import { ADVANCED_QUESTIONS as ADVANCED_SR_CYRL } from '../locales/constants/advanced-sr-Cyrl';
 
 
 const ALL_ADVANCED_QUESTIONS: { [key: string]: AdvancedQuestion[] } = {

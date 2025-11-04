@@ -1,92 +1,96 @@
-# Math Race for Kids - Deployment Guide
+# Math Racers (Math Race for Kids)
 
-This guide provides instructions on how to build this React application locally using Docker and deploy it to GitHub Pages.
+A small, friendly web app that helps children practise basic arithmetic with a playful racing theme. It's targeted at teachers, parents and kids aged ~5–10 who want short, focused practice sessions.
 
-A build system (Vite) has been added to this project to bundle the code into static HTML, CSS, and JavaScript files that can be hosted on any static web host.
+Live demo
 
-## Prerequisites
+- A live hosted version is available at: https://lukastosic.github.io/math-racers/
 
-1.  **Docker:** You must have Docker installed and running on your local machine.
-2.  **GitHub Repository:** You need a GitHub repository to host your project's code and the final deployed site.
-3.  **Node.js & npm:** Required for installing dependencies if you choose to build outside of Docker.
+Why this project
 
-## Step 1: Project Setup
+- Simple, approachable UI for kids
+- Multiple difficulty categories (sum/min/advanced)
+- Localized into several languages
+- Small, dependency-light codebase using React + Vite + TypeScript
 
-Before you can build the project, you need to configure it for your GitHub repository.
+Quick overview — where things live
 
-1.  **Install Dependencies:** Open your terminal in the project root and run:
-    ```bash
-    npm install
-    ```
+- Source code: `src/`
+	- `src/locales/*.json` — translation JSON files (one file per locale)
+	- `src/locales/constants/*.ts` — advanced question sets for each locale (TypeScript modules exporting `ADVANCED_QUESTIONS`)
+	- `src/hooks/useTranslations.ts` — the translations loader used by the app
+	- `src/hooks/useQuestionGenerator.ts` — question generation logic (uses advanced questions for the ADVANCED category)
+	- `src/contexts/LanguageContext.tsx` — current locale and provider
+	- `src/screens/` — main UI screens (Home, Setup, Game, Completion)
 
-2.  **Configure Base Path:** Open `vite.config.ts` and change the `base` property from `/<YOUR_REPOSITORY_NAME>/` to match your GitHub repository's name. For example, if your repository URL is `https://github.com/your-username/math-race`, you should change the line to:
-    ```typescript
-    base: '/math-racers/',
-    ```
-    This step is crucial for ensuring the app's assets load correctly on GitHub Pages.
+Add a new language
 
-## Step 2: Build the Application Locally with Docker
+1. Create a translation file in `src/locales/` named with the locale code, e.g. `fr.json`.
+	 - The file should use the same keys as the existing `en.json`. You can copy `en.json` and translate the strings.
 
-Using Docker ensures you have the correct environment for building the application without needing to manage Node.js versions locally.
+2. Add an advanced-questions module in `src/locales/constants/` named `advanced-<locale>.ts`, e.g. `advanced-fr.ts`.
+	 - Export a constant named `ADVANCED_QUESTIONS` which matches the project's `AdvancedQuestion` type. Example:
 
-1.  **Build the Docker Image:** In the project's root directory, run the following command to build a Docker image named `math-race-builder`.
-    ```bash
-    docker build -t math-race-builder .
-    ```
+```ts
+// src/locales/constants/advanced-fr.ts
+import { AdvancedQuestion } from '../../types';
 
-2.  **Extract the Build Artifacts:** These commands will create a temporary container from the image, copy the `dist` folder (which contains the production-ready website) from the container to your local machine, and then remove the container.
+export const ADVANCED_QUESTIONS: AdvancedQuestion[] = [
+	{
+		question: 'Quel nombre complète la suite: 2, 4, 6, ? ',
+		answers: [
+			{ answer: 8, correct: true },
+			{ answer: 7, correct: false },
+			{ answer: 6, correct: false },
+			{ answer: 10, correct: false },
+		],
+	},
+	// ...more questions
+];
+```
 
-Copy the `dist` into `docs` folder to be able to map a subfoder of a repo to a github pages
-    ```bash
-    # Create a temporary container
-    docker create --name math-race-container math-race-builder
+3. Wire up the locale (if necessary): the `LanguageContext` accepts explicit locale codes; make sure your new locale code is included where used (if you have enum lists). Generally the loader will pick up any `src/locales/<locale>.json` and `src/locales/constants/advanced-<locale>.ts` dynamically.
 
-    # Copy the /app/dist folder from the container to your current directory
-    docker cp math-race-container:/app/dist ./docs
+Where to adjust advanced questions
 
-    # Remove the temporary container
-    docker rm math-race-container
-    ```
+- Advanced question data lives in `src/locales/constants/` as `advanced-*.ts` files. Edit those files to add, remove, or translate advanced questions for each language.
 
-After these steps, you will have a `docs` folder in your project directory. This folder contains the complete, optimized website ready for deployment.
+Run locally
 
-## Step 3: Deploy to GitHub Pages
+- Install dependencies:
 
-We will deploy the contents of the `dist` folder to a special branch named `gh-pages` in your repository. GitHub Pages will automatically serve the files from this branch.
+```bash
+npm install
+```
 
-1.  **Navigate into the `dist` directory:**
-    ```bash
-    cd dist
-    ```
-    **Important:** The following commands must be run from *inside* the `dist` directory.
+- Development server:
 
-2.  **Initialize a new Git repository:**
-    ```bash
-    git init
-    git checkout -b gh-pages
-    ```
+```bash
+npm run dev
+```
 
-3.  **Add and commit the files:**
-    ```bash
-    git add .
-    git commit -m "Deploy to GitHub Pages"
-    ```
+- Build for production:
 
-4.  **Add your remote repository:** Replace `<YOUR_REPOSITORY_URL>` with your actual repository URL (e.g., `https://github.com/your-username/math-race.git`).
-    ```bash
-    git remote add origin <YOUR_REPOSITORY_URL>
-    ```
+```bash
+npm run build
+```
 
-5.  **Push to the `gh-pages` branch:** The `-f` (force) flag is used to overwrite the history of the `gh-pages` branch on each deployment, which is a common practice for this type of deployment.
-    ```bash
-    git push -f origin gh-pages
-    ```
+- Preview the production build locally:
 
-6.  **Configure GitHub Pages:**
-    *   Go to your repository on GitHub.
-    *   Click on **Settings** > **Pages**.
-    *   Under "Build and deployment", for the **Source**, select **Deploy from a branch**.
-    *   For the **Branch**, select `gh-pages` and `/ (root)`.
-    *   Click **Save**.
+```bash
+npm run preview
+```
 
-Your website should be live at `https://<your-username>.github.io/<your-repository-name>/` within a few minutes.
+Build & deploy notes
+
+- There's a `BUILD.md` file in the repo that explains how to build and deploy to GitHub Pages (the live demo was deployed using that flow). If you plan to host under a subpath (like `https://<user>.github.io/<repo>/`) make sure `vite`'s `base` option is configured appropriately in `vite.config.ts`.
+
+Extras and troubleshooting
+
+- Translations: the app uses dynamic imports for JSON locales from `src/locales/`. If you add new files, re-run the build so Vite can include them.
+
+- If the preview server can't find translations, double-check you didn't accidentally duplicate locale files in `public/locales` — the project expects `src/locales` to be the source of truth.
+
+- TypeScript: the project enables `resolveJsonModule` so JSON files can be imported. If you see type errors, run `npx tsc --noEmit` to inspect them.
+
+Enjoy!

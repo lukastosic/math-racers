@@ -1,4 +1,4 @@
-import { AdvancedQuestion } from '../../../src/types';
+import { AdvancedQuestion } from '../../types';
 
 export const ADVANCED_QUESTIONS: AdvancedQuestion[] = [
   {

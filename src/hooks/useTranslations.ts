@@ -26,12 +26,10 @@ export const useTranslations = () => {
       }
 
       try {
-        // Fetch the JSON file from the public path, which Vite serves at the root.
-        const response = await fetch(`./locales/${locale}.json`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        // Load JSON via dynamic import from src/locales. This avoids copying files
+        // to public/ and works both in dev and in the build output.
+        const module = await import(`../locales/${locale}.json`);
+        const data = module.default || module;
         translationsCache[locale] = data; // Store in cache
         if (isMounted) {
           setTranslations(data);
@@ -40,21 +38,21 @@ export const useTranslations = () => {
         console.error(`Could not load translations for ${locale}:`, error);
         // Fallback to English if the current locale fails
         if (locale !== 'en') {
-            try {
-                const fallbackResponse = await fetch(`./locales/en.json`);
-                const fallbackData = await fallbackResponse.json();
-                translationsCache['en'] = fallbackData; // Cache fallback
-                if (isMounted) {
-                    setTranslations(fallbackData);
-                }
-            } catch (fallbackError) {
-                 console.error(`Could not load fallback English translations:`, fallbackError);
-                 if (isMounted) {
-                    setTranslations({}); // Set empty object on total failure
-                 }
+          try {
+            const fallbackModule = await import(`../locales/en.json`);
+            const fallbackData = fallbackModule.default || fallbackModule;
+            translationsCache['en'] = fallbackData; // Cache fallback
+            if (isMounted) {
+              setTranslations(fallbackData);
             }
+          } catch (fallbackError) {
+            console.error(`Could not load fallback English translations:`, fallbackError);
+            if (isMounted) {
+              setTranslations({}); // Set empty object on total failure
+            }
+          }
         } else if (isMounted) {
-            setTranslations({});
+          setTranslations({});
         }
       }
     };
